@@ -90,8 +90,8 @@
                 }
 
                 if (data.session) {
-                    // DEĞİŞTİRİLEN SATIR BURADA: Sadece istediğiniz mesajı gösterecek
-                    statusMessage.textContent = 'E-postanız başarıyla doğrulandı! Uygulamaya giriş yapabilirsiniz.'; 
+                    // DEĞİŞTİRİLEN SATIR BURADA: Sadece "E-postanız başarıyla doğrulandı!" yazacak
+                    statusMessage.textContent = 'E-postanız başarıyla doğrulandı!'; 
                     statusMessage.className = 'success';
                     verificationSuccessful = true;
                 } else {
@@ -103,21 +103,11 @@
                 statusMessage.className = 'error';
                 console.error("Vercel'de oturum doğrulama hatası:", error);
             } finally {
-                if (verificationSuccessful) {
-                    // Başarılı olursa butonu göster ve manuel yönlendirme
-                    // Otomatik yönlendirme satırı kaldırıldı, kullanıcı butona basacak
-                    redirectButton.textContent = 'Uygulamaya Geri Dön';
-                    redirectButton.style.display = 'block';
-                    redirectButton.onclick = () => {
-                        window.location.href = mobileAppScheme; 
-                    };
-                } else {
-                    // Hata olursa veya token yoksa, sadece butonu göster
-                    redirectButton.style.display = 'block';
-                    redirectButton.onclick = () => {
-                        window.location.href = mobileAppScheme;
-                    };
-                }
+                // Başarılı olsun veya olmasın, butonu göster
+                redirectButton.style.display = 'block';
+                redirectButton.onclick = () => {
+                    window.location.href = mobileAppScheme; 
+                };
             }
         }
 
