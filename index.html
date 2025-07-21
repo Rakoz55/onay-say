@@ -2,35 +2,12 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <title>E-posta Doğrulama</title>
+  <title>Test Buton</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
+      padding: 50px;
       text-align: center;
-    }
-    .container {
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
-      width: 90%;
-    }
-    h1 {
-      color: #333;
-      margin-bottom: 20px;
-    }
-    p {
-      color: #28a745; /* Yeşil */
-      font-size: 1.1em;
-      margin-bottom: 20px;
-      display: none; /* Başlangıçta gizli */
     }
     button {
       background-color: #E10600;
@@ -39,29 +16,25 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 1em;
-      margin-top: 15px;
-    }
-    button:hover {
-      opacity: 0.9;
+      font-size: 20px;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>E-posta Doğrulama</h1>
-    <button id="verifyButton">Doğrula</button>
-    <p id="successMessage">E-postanız başarıyla doğrulandı!</p>
-  </div>
+  <button id="verifyButton">Doğrula</button>
+  <p id="successMessage" style="display:none; color: green; font-weight: bold; font-size: 18px; margin-top: 20px;">
+    E-postanız başarıyla doğrulandı!
+  </p>
 
   <script>
     const verifyButton = document.getElementById('verifyButton');
     const successMessage = document.getElementById('successMessage');
 
-    verifyButton.addEventListener('click', () => {
-      successMessage.style.display = 'block';   // Mesaj göster
-      verifyButton.style.display = 'none';      // Butonu gizle
-    });
+    verifyButton.onclick = () => {
+      successMessage.style.display = 'block';
+      verifyButton.style.display = 'none';
+    };
   </script>
 </body>
 </html>
