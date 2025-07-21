@@ -1,126 +1,112 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-posta Doğrulama</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            text-align: center;
-        }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 90%;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        p {
-            color: #555;
-            font-size: 1.1em;
-            margin-bottom: 20px;
-        }
-        .loading {
-            color: #888;
-        }
-        .success {
-            color: #28a745; /* Yeşil */
-        }
-        .error {
-            color: #dc3545; /* Kırmızı */
-        }
-        button {
-            background-color: #E10600; /* PrimaryColor */
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            margin-top: 15px;
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-posta Doğrulama</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 90%;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    p {
+      color: #555;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+    .loading {
+      color: #888;
+    }
+    .success {
+      color: #28a745; /* Yeşil */
+    }
+    .error {
+      color: #dc3545; /* Kırmızı */
+    }
+    button {
+      background-color: #E10600; /* PrimaryColor */
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      margin-top: 15px;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>E-posta Doğrulama</h1>
-        <p id="statusMessage" class="loading">Doğrulanıyor, lütfen bekleyin...</p>
-        <button id="redirectButton" style="display: none;">Uygulamaya Geri Dön</button>
-    </div>
+  <div class="container">
+    <h1>E-posta Doğrulama</h1>
+    <p id="statusMessage" class="loading">Doğrulanıyor, lütfen bekleyin...</p>
+    <button id="redirectButton" style="display: none;">Uygulamaya Geri Dön</button>
+  </div>
 
-    <script defer nomodule>
-        // Supabase JS SDK'sını dinamik olarak yüklüyoruz.
-        const supabaseScript = document.createElement('script');
-        supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.2';
-        document.body.appendChild(supabaseScript); 
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.2/+esm'; 
 
-        supabaseScript.onload = async () => {
-            // SDK yüklendikten sonra 'supabase_js' global değişkeni üzerinden createClient'a erişebiliriz.
+    const supabaseUrl = 'https://vzbjscgpdmbmlqbxqxra.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6YmpzY2dwZG1ibWxxYnhxeHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMzEyMjEsImV4cCI6MjA2ODcwNzIyMX0.kx6qiTGg_jovm4XLHFqD5n5D60tVFOGFltQvrO1wzRs';
 
-            // BURADA SİZİN EN YENİ PROJENİZİN URL VE ANON KEY'İ KULLANILIYOR
-            const supabaseUrl = 'https://vzbjscgpdmbmlqbxqxra.supabase.co'; 
-            const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6YmpzY2dwZG1ibWxxYnhxeHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMzEyMjEsImV4cCI6MjA2ODcwNzIyMX0.kx6qiTGg_jovm4XLHFqD5n5D60tVFOGFltQvrO1wzRs'; 
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-            const supabase = supabase_js.createClient(supabaseUrl, supabaseAnonKey); 
+    const statusMessage = document.getElementById('statusMessage');
+    const redirectButton = document.getElementById('redirectButton');
+    const mobileAppScheme = 'app://com.muzikakisi.auth'; // Mobil uygulamanın deep link şeması
 
-            const statusMessage = document.getElementById('statusMessage');
-            const errorDetails = document.getElementById('errorDetails');
-            const redirectButton = document.getElementById('redirectButton');
-            const mobileAppScheme = 'app://com.muzikakisi.auth'; // Mobil uygulamanızın deep link şeması
+    async function handleVerification() {
+      let verificationSuccessful = false;
 
-            async function handleVercelVerification() {
-                const url = window.location.href; 
-                let verificationSuccessful = false;
+      try {
+        // Supabase v2 fonksiyonu
+        const { data, error } = await supabase.auth.exchangeCodeForSession();
 
-                try {
-                    const { data, error } = await supabase.auth.getSessionFromUrl({ url });
+        if (error) {
+          throw error;
+        }
 
-                    if (error) {
-                        throw error;
-                    }
-
-                    if (data.session) {
-                        statusMessage.textContent = 'E-postanız başarıyla doğrulandı!'; 
-                        statusMessage.className = 'success';
-                        verificationSuccessful = true;
-                    } else {
-                        statusMessage.textContent = 'Doğrulama başarısız oldu veya geçersiz bir link.';
-                        statusMessage.className = 'error'; 
-                        errorDetails.textContent = 'Detay: Geçersiz token veya oturum bilgisi yok.';
-                        errorDetails.style.display = 'block';
-                    }
-                } catch (error) {
-                    statusMessage.textContent = 'Doğrulama sırasında bir hata oluştu!';
-                    statusMessage.className = 'error'; 
-                    errorDetails.textContent = `Detay: ${error.message || error.toString()}`;
-                    errorDetails.style.display = 'block'; 
-                    console.error("Vercel'de oturum doğrulama hatası:", error);
-                } finally {
-                    redirectButton.textContent = 'Uygulamaya Geri Dön';
-                    redirectButton.style.display = 'block'; 
-                    redirectButton.onclick = () => { 
-                        window.location.href = mobileAppScheme; 
-                    };
-                }
-            }
-
-            document.addEventListener('DOMContentLoaded', handleVercelVerification);
+        if (data.session) {
+          statusMessage.textContent = 'E-postanız başarıyla doğrulandı!';
+          statusMessage.className = 'success';
+          verificationSuccessful = true;
+        } else {
+          statusMessage.textContent = 'Doğrulama başarısız oldu veya geçersiz bir link.';
+          statusMessage.className = 'error';
+        }
+      } catch (error) {
+        statusMessage.textContent = 'Doğrulama sırasında bir hata oluştu!';
+        statusMessage.className = 'error';
+        console.error("Doğrulama hatası:", error);
+      } finally {
+        redirectButton.style.display = 'block';
+        redirectButton.onclick = () => {
+          window.location.href = mobileAppScheme;
         };
-    </script>
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', handleVerification);
+  </script>
 </body>
 </html>
