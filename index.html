@@ -3,126 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-posta Doğrulama</title>
-    <style>
+    <title>E-posta Doğrulama Durumu</title> <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #f5f5f5; /* Açık gri arka plan */
             text-align: center;
+            color: #333;
+            line-height: 1.6;
         }
         .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            background-color: #ffffff; /* Beyaz kutu arka planı */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+            max-width: 450px;
             width: 90%;
+            border: 1px solid #ddd;
         }
         h1 {
-            color: #333;
-            margin-bottom: 20px;
+            color: #1a202c; /* Koyu başlık rengi */
+            margin-bottom: 25px;
+            font-size: 2em;
         }
         p {
-            color: #555;
+            color: #4a5568; /* Koyu gri metin */
             font-size: 1.1em;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .loading {
-            color: #888;
+            color: #63b3ed; /* Mavi - Yükleniyor durumu */
+            font-weight: bold;
         }
         .success {
-            color: #28a745; /* Yeşil */
+            color: #38a169; /* Yeşil - Başarılı durumu */
+            font-weight: bold;
         }
         .error {
-            color: #dc3545; /* Kırmızı */
+            color: #e53e3e; /* Kırmızı - Hata durumu */
+            font-weight: bold;
         }
         button {
-            background-color: #E10600; /* PrimaryColor */
+            background-color: #E10600; /* Kırmızı - Uygulama ana rengi */
             color: white;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1em;
-            margin-top: 15px;
+            font-size: 1.1em;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         button:hover {
-            opacity: 0.9;
+            background-color: #c50000; /* Koyu kırmızı hover */
+        }
+        .error-details { /* Hata detayları için stil */
+            font-size: 0.9em;
+            color: #718096;
+            margin-top: 10px;
+            word-wrap: break-word; /* Uzun hataları sığdırma */
+            white-space: pre-wrap; /* Satır sonlarını koru */
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>E-posta Doğrulama</h1>
+        <h1>E-posta Doğrulama Durumu</h1>
         <p id="statusMessage" class="loading">Doğrulanıyor, lütfen bekleyin...</p>
+        <p id="errorDetails" class="error-details" style="display: none;"></p>
         <button id="redirectButton" style="display: none;">Uygulamaya Geri Dön</button>
     </div>
 
-    <script type="module">
-        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.44.2'; 
-        
-        // Vercel projenizin ENV değişkenlerinde Supabase bilgilerini tutmak daha güvenlidir.
-        // Ancak bu örnek için doğrudan buraya yazabilirsiniz.
-        const supabaseUrl = 'https://pxwqqvsooljxdfbmnqj.supabase.co'; // Sizin yeni projenizin URL'si
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4d3FxdnNvb2xqZXhkZmJtbnFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjY2OTIsImV4cCI6MjA2ODUwMjY5Mn0.s55Cdxl5VIU3qstC-Ia9beJ15ORsADaahQNcgkqUAbw'; // Sizin yeni anon key'iniz
+    <script defer nomodule> 
+        // defer: Betiğin HTML ayrıştırıldıktan sonra ancak DOMContentLoaded'den önce çalışmasını sağlar.
+        // nomodule: type="module" desteklemeyen tarayıcılar için yedek olarak çalışır, burada hata giderme amaçlı kullandık.
 
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+        // Supabase JS SDK'sını bir CDN üzerinden içe aktarıyoruz.
+        // Bu, Vercel projenizde '@supabase/supabase-js' paketini npm ile yüklemediyseniz kullanışlıdır.
+        // Eğer Vercel projeniz Next.js/React ise ve npm kullanıyorsa, import { createClient } from '@supabase/supabase-js'; kullanmalısınız.
+        // Bu örnek doğrudan bir HTML dosyası için yazılmıştır.
 
-        const statusMessage = document.getElementById('statusMessage');
-        const redirectButton = document.getElementById('redirectButton');
-        const mobileAppScheme = 'app://com.muzikakisi.auth'; // Mobil uygulamanızın deep link şeması
+        // Supabase SDK'sını dinamik olarak yükleme (Referans hatasını gidermek için deneysel yöntem)
+        const supabaseScript = document.createElement('script');
+        supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.2';
+        document.body.appendChild(supabaseScript); // Script'i body'ye ekle
 
-        async function handleVercelVerification() {
-            const url = window.location.href; // Mevcut URL'yi al
-            let verificationSuccessful = false;
+        // Script yüklendikten sonra çalışacak olay dinleyicisi
+        supabaseScript.onload = async () => {
+            // SDK yüklendikten sonra 'supabase_js' global değişkeni üzerinden createClient'a erişebiliriz.
+            // Bu, 'createClient'ın tanımlanmadan önce çağrılmasını engeller.
 
-            try {
-                // Supabase'den oturum bilgilerini doğrula
-                const { data, error } = await supabase.auth.getSessionFromUrl({ url });
+            // Vercel projenizin ortam değişkenlerinde (Environment Variables) Supabase bilgilerini tutmak en güvenli yoldur.
+            // Ancak bu örnek için doğrudan buraya yazabilirsiniz.
+            const supabaseUrl = 'https://pxwqqvsooljxdfbmnqj.supabase.co'; // Sizin yeni projenizin URL'si
+            const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4d3FxdnNvb2xqZXhkZmJtbnFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjY2OTIsImV4cCI6MjA2ODUwMjY5Mn0.s55Cdxl5VIU3qstC-Ia9beJ15ORsADaahQNcgkqUAbw'; // Sizin yeni anon key'iniz
 
-                if (error) {
-                    throw error;
-                }
+            // Supabase istemcisini oluştur
+            const supabase = supabase_js.createClient(supabaseUrl, supabaseAnonKey); // Global supabase_js objesini kullanıyoruz
 
-                if (data.session) {
-                    // DEĞİŞTİRİLEN SATIR BURADA: Sadece istediğiniz mesajı gösterecek
-                    statusMessage.textContent = 'E-postanız başarıyla doğrulandı! Uygulamaya giriş yapabilirsiniz.'; 
-                    statusMessage.className = 'success';
-                    verificationSuccessful = true;
-                } else {
-                    statusMessage.textContent = 'Doğrulama başarısız oldu veya geçersiz bir link.';
-                    statusMessage.className = 'error';
-                }
-            } catch (error) {
-                statusMessage.textContent = `Doğrulama sırasında bir hata oluştu: ${error.message || error.toString()}`;
-                statusMessage.className = 'error';
-                console.error("Vercel'de oturum doğrulama hatası:", error);
-            } finally {
-                if (verificationSuccessful) {
-                    // Başarılı olursa butonu göster ve manuel yönlendirme
-                    // Otomatik yönlendirme satırı kaldırıldı, kullanıcı butona basacak
+            // HTML elemanlarına erişim
+            const statusMessage = document.getElementById('statusMessage');
+            const errorDetails = document.getElementById('errorDetails');
+            const redirectButton = document.getElementById('redirectButton');
+            const mobileAppScheme = 'app://com.muzikakisi.auth'; // Mobil uygulamanızın deep link şeması
+
+            async function handleVercelVerification() {
+                const url = window.location.href; // Mevcut URL'yi al
+                let verificationSuccessful = false;
+
+                try {
+                    // Supabase'den oturum bilgilerini doğrula
+                    // Bu çağrı, URL'deki access_token'ı Supabase ile doğrular ve oturumu ayarlar.
+                    const { data, error } = await supabase.auth.getSessionFromUrl({ url });
+
+                    if (error) { // Eğer Supabase'ten bir hata gelirse
+                        throw error;
+                    }
+
+                    if (data.session) { // Eğer oturum başarıyla doğrulanırsa
+                        statusMessage.textContent = 'E-postanız başarıyla doğrulandı!'; 
+                        statusMessage.className = 'success'; // Mesajı yeşil yapar
+                        verificationSuccessful = true;
+                    } else { // Eğer oturum verisi yoksa ama hata da yoksa (token geçersiz olabilir)
+                        statusMessage.textContent = 'Doğrulama başarısız oldu veya geçersiz bir link.';
+                        statusMessage.className = 'error'; // Mesajı kırmızı yapar
+                        errorDetails.textContent = 'Lütfen e-posta onay linkini doğru tıkladığınızdan veya süresinin dolmadığından emin olun.';
+                        errorDetails.style.display = 'block';
+                    }
+                } catch (error) { // İşlem sırasında bir JavaScript hatası oluşursa
+                    statusMessage.textContent = 'Doğrulama sırasında bir hata oluştu!';
+                    statusMessage.className = 'error'; // Mesajı kırmızı yapar
+                    errorDetails.textContent = `Detay: ${error.message || error.toString()}`;
+                    errorDetails.style.display = 'block'; // Hata detaylarını göster
+                    console.error("Vercel'de oturum doğrulama hatası:", error);
+                } finally {
+                    // Başarılı olsun veya olmasın, yönlendirme butonunu göster
                     redirectButton.textContent = 'Uygulamaya Geri Dön';
-                    redirectButton.style.display = 'block';
-                    redirectButton.onclick = () => {
+                    redirectButton.style.display = 'block'; // Butonu görünür yap
+                    redirectButton.onclick = () => { // Butona basıldığında mobil uygulamaya yönlendir
                         window.location.href = mobileAppScheme; 
-                    };
-                } else {
-                    // Hata olursa veya token yoksa, sadece butonu göster
-                    redirectButton.style.display = 'block';
-                    redirectButton.onclick = () => {
-                        window.location.href = mobileAppScheme;
                     };
                 }
             }
-        }
 
-        // Sayfa yüklendiğinde doğrulamayı başlat
-        handleVercelVerification();
+            // Sayfa yüklendiğinde doğrulamayı başlat
+            // DOM tamamen yüklendikten sonra çağırdığımız için, güvenli bir şekilde çalışmalı
+            handleVercelVerification();
+        };
     </script>
 </body>
 </html>
