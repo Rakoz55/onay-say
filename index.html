@@ -64,7 +64,8 @@
     </div>
 
     <script type="module">
-        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.44.2'; 
+        // DEĞİŞEN SATIR BURADA: esm.sh yerine cdn.jsdelivr.net kullanıyoruz
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.2/+esm'; 
         
         // Vercel projenizin ENV değişkenlerinde Supabase bilgilerini tutmak daha güvenlidir.
         // Ancak bu örnek için doğrudan buraya yazabilirsiniz.
@@ -90,7 +91,6 @@
                 }
 
                 if (data.session) {
-                    // DEĞİŞTİRİLEN SATIR BURADA: Sadece "E-postanız başarıyla doğrulandı!" yazacak
                     statusMessage.textContent = 'E-postanız başarıyla doğrulandı!'; 
                     statusMessage.className = 'success';
                     verificationSuccessful = true;
