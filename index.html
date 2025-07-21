@@ -63,54 +63,64 @@
         <button id="redirectButton" style="display: none;">Uygulamaya Geri Dön</button>
     </div>
 
-    <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.2/+esm'; 
-        
-        const supabaseUrl = 'https://pxwqqvsooljxdfbmnqj.supabase.co'; // Sizin yeni projenizin URL'si
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4d3FxdnNvb2xqZXhkZmJtbnFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjY2OTIsImV4cCI6MjA2ODUwMjY5Mn0.s55Cdxl5VIU3qstC-Ia9beJ15ORsADaahQNcgkqUAbw'; // Sizin yeni anon key'iniz
+    <script defer nomodule>
+        // Supabase JS SDK'sını buradan yüklemek için eski bir yöntem kullanıyoruz
+        // Eğer Vercel projeniz Next.js/React ise, bu kodu component içinde farklı bir şekilde kullanmanız gerekir.
+        // Bu örnek, doğrudan bir HTML dosyası veya vanilla JS kullanan bir sayfa için uygundur.
 
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+        // Supabase SDK'sını doğrudan HTML'e dahil ediyoruz
+        // Bu URL'yi doğrudan tarayıcıda açtığınızda JS kodunu göreceksiniz.
+        // Bu yöntem, 'type="module"' ile yaşanan sorunları aşmaya yardımcı olabilir.
+        const supabaseScript = document.createElement('script');
+        supabaseScript.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.2';
+        supabaseScript.onload = async () => {
+            // SDK yüklendikten sonra supabase objesi global olarak kullanılabilir olur
+            // createClient fonksiyonunu doğrudan kullanabiliriz.
 
-        const statusMessage = document.getElementById('statusMessage');
-        const redirectButton = document.getElementById('redirectButton');
-        const mobileAppScheme = 'app://com.muzikakisi.auth'; // Mobil uygulamanızın deep link şeması
+            const supabaseUrl = 'https://pxwqqvsooljxdfbmnqj.supabase.co'; // Sizin yeni projenizin URL'si
+            const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4d3FxdnNvb2xqZXhkZmJtbnFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjY2OTIsImV4cCI6MjA2ODUwMjY5Mn0.s55Cdxl5VIU3qstC-Ia9beJ15ORsADaahQNcgkqUAbw'; // Sizin yeni anon key'iniz
 
-        async function handleVercelVerification() {
-            const url = window.location.href; // Mevcut URL'yi al
-            let verificationSuccessful = false;
+            const supabase = supabase_js.createClient(supabaseUrl, supabaseAnonKey); // 'supabase_js' global değişkenini kullanıyoruz
 
-            try {
-                // Supabase'den oturum bilgilerini doğrula
-                const { data, error } = await supabase.auth.getSessionFromUrl({ url });
+            const statusMessage = document.getElementById('statusMessage');
+            const redirectButton = document.getElementById('redirectButton');
+            const mobileAppScheme = 'app://com.muzikakisi.auth'; // Mobil uygulamanızın deep link şeması
 
-                if (error) {
-                    throw error;
-                }
+            async function handleVercelVerification() {
+                const url = window.location.href; // Mevcut URL'yi al
+                let verificationSuccessful = false;
 
-                if (data.session) {
-                    statusMessage.textContent = 'E-postanız başarıyla doğrulandı!'; 
-                    statusMessage.className = 'success';
-                    verificationSuccessful = true;
-                } else {
-                    statusMessage.textContent = 'Doğrulama başarısız oldu veya geçersiz bir link.';
+                try {
+                    const { data, error } = await supabase.auth.getSessionFromUrl({ url });
+
+                    if (error) {
+                        throw error;
+                    }
+
+                    if (data.session) {
+                        statusMessage.textContent = 'E-postanız başarıyla doğrulandı!'; 
+                        statusMessage.className = 'success';
+                        verificationSuccessful = true;
+                    } else {
+                        statusMessage.textContent = 'Doğrulama başarısız oldu veya geçersiz bir link.';
+                        statusMessage.className = 'error';
+                    }
+                } catch (error) {
+                    statusMessage.textContent = `Doğrulama sırasında bir hata oluştu: ${error.message || error.toString()}`;
                     statusMessage.className = 'error';
+                    console.error("Vercel'de oturum doğrulama hatası:", error);
+                } finally {
+                    redirectButton.style.display = 'block';
+                    redirectButton.onclick = () => {
+                        window.location.href = mobileAppScheme; 
+                    };
                 }
-            } catch (error) {
-                statusMessage.textContent = `Doğrulama sırasında bir hata oluştu: ${error.message || error.toString()}`;
-                statusMessage.className = 'error';
-                console.error("Vercel'de oturum doğrulama hatası:", error);
-            } finally {
-                // Başarılı olsun veya olmasın, butonu göster
-                redirectButton.style.display = 'block';
-                redirectButton.onclick = () => {
-                    window.location.href = mobileAppScheme; 
-                };
             }
-        }
 
-        // DEĞİŞTİRİLEN KISIM BURADA: handleVercelVerification fonksiyonunu doğrudan çağırmıyoruz.
-        // Bunun yerine, DOM tamamen yüklendiğinde çalıştırıyoruz.
-        document.addEventListener('DOMContentLoaded', handleVercelVerification);
+            // Sayfa yüklendiğinde doğrulamayı başlat
+            handleVercelVerification();
+        };
+        document.body.appendChild(supabaseScript);
     </script>
 </body>
 </html>
