@@ -64,11 +64,8 @@
     </div>
 
     <script type="module">
-        // DEĞİŞEN SATIR BURADA: esm.sh yerine cdn.jsdelivr.net kullanıyoruz
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.2/+esm'; 
         
-        // Vercel projenizin ENV değişkenlerinde Supabase bilgilerini tutmak daha güvenlidir.
-        // Ancak bu örnek için doğrudan buraya yazabilirsiniz.
         const supabaseUrl = 'https://pxwqqvsooljxdfbmnqj.supabase.co'; // Sizin yeni projenizin URL'si
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4d3FxdnNvb2xqZXhkZmJtbnFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjY2OTIsImV4cCI6MjA2ODUwMjY5Mn0.s55Cdxl5VIU3qstC-Ia9beJ15ORsADaahQNcgkqUAbw'; // Sizin yeni anon key'iniz
 
@@ -111,8 +108,9 @@
             }
         }
 
-        // Sayfa yüklendiğinde doğrulamayı başlat
-        handleVercelVerification();
+        // DEĞİŞTİRİLEN KISIM BURADA: handleVercelVerification fonksiyonunu doğrudan çağırmıyoruz.
+        // Bunun yerine, DOM tamamen yüklendiğinde çalıştırıyoruz.
+        document.addEventListener('DOMContentLoaded', handleVercelVerification);
     </script>
 </body>
 </html>
